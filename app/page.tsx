@@ -5,7 +5,7 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.shell}>
         <p className={styles.eyebrow}>Non-profit in Markham, Ontario</p>
-        <h1 className={styles.title}>AK Foundation</h1>
+        <h1 className={styles.title}>A&K Foundation</h1>
         <p className={styles.lede}>
           Cultivating community through music, mentorship, and performance.
         </p>
