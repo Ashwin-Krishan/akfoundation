@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 *,
@@ -18,7 +18,8 @@ body {
 
 body {
   font-family: var(--font-sans);
-  color: #15120f;
+  background: #120f0c;
+  color: #f3ece1;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
