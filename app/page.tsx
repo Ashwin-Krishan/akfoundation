@@ -1,5 +1,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import Events from "./Events";
+import { events, todayInToronto } from "./event-data";
 
 const studioShots = [
   {
@@ -22,6 +24,9 @@ const studioShots = [
   },
 ];
 
+// Module scope runs once per build, so this is the build date.
+const builtOn = todayInToronto(Date.now());
+
 export default function Home() {
   return (
     <div className={styles.page}>
@@ -31,6 +36,7 @@ export default function Home() {
         </a>
         <nav className={styles.navLinks}>
           <a href="#about">About</a>
+          <a href="#events">Events</a>
           <a href="#studio">Studio</a>
           <a href="#contact">Contact</a>
         </nav>
@@ -94,6 +100,18 @@ export default function Home() {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        <section id="events" className={styles.section}>
+          <div className={styles.sectionInner}>
+            <p className={styles.eyebrowDark}>What&apos;s On</p>
+            <h2 className={styles.sectionTitle}>Upcoming Events</h2>
+            <p className={styles.sectionLede}>
+              Recitals, showcases, and concerts at Aayakalaihal Arangam. Tap
+              an event for the full details.
+            </p>
+            <Events events={events} builtOn={builtOn} />
           </div>
         </section>
 
