@@ -1,4 +1,4 @@
-export const SITE_URL = "https://www.akfoundation.ca";
+export const SITE_URL = "https://akfoundation.ca";
 export const SITE_NAME = "A&K Foundation";
 export const VENUE_NAME = "Aayakalaihal Arangam";
 export const DESCRIPTION =
