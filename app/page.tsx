@@ -1,7 +1,8 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Events from "./Events";
-import { events, todayInToronto } from "./event-data";
+import { events, todayInToronto, type StudioEvent } from "./event-data";
+import { ADDRESS, DESCRIPTION, EMAIL, INSTAGRAM, SITE_NAME, SITE_URL, VENUE_NAME } from "./site";
 
 const studioShots = [
   {
@@ -27,9 +28,92 @@ const studioShots = [
 // Module scope runs once per build, so this is the build date.
 const builtOn = todayInToronto(Date.now());
 
+const venue = {
+  "@type": "PerformingArtsTheater",
+  "@id": `${SITE_URL}/#venue`,
+  name: VENUE_NAME,
+  address: ADDRESS,
+  url: SITE_URL,
+};
+
+// "4:00 PM" on 2026-10-17 -> "2026-10-17T16:00:00-04:00".
+function startDate({ date, time }: StudioEvent) {
+  const m = time.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
+  if (!m) return date;
+  const hour = (Number(m[1]) % 12) + (m[3].toUpperCase() === "PM" ? 12 : 0);
+  const local = `${date}T${String(hour).padStart(2, "0")}:${m[2] ?? "00"}`;
+  // Toronto's UTC offset on that day (EDT/EST), e.g. "GMT-04:00" -> "-04:00".
+  const offset = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Toronto",
+    timeZoneName: "longOffset",
+  })
+    .formatToParts(new Date(`${date}T12:00:00Z`))
+    .find((p) => p.type === "timeZoneName")
+    ?.value.replace("GMT", "");
+  return `${local}:00${offset || "Z"}`;
+}
+
+function eventOffers(event: StudioEvent) {
+  if (!event.price) return { "@type": "Offer", price: 0, priceCurrency: "CAD", url: event.ticketUrl };
+  const prices =
+    typeof event.price === "number"
+      ? [event.price]
+      : [...event.price.matchAll(/\$(\d+(?:\.\d+)?)/g)].map((m) => Number(m[1]));
+  return {
+    "@type": "AggregateOffer",
+    lowPrice: Math.min(...prices),
+    highPrice: Math.max(...prices),
+    priceCurrency: "CAD",
+    url: event.ticketUrl,
+    availability: "https://schema.org/InStock",
+  };
+}
+
+// Structured data so search engines understand the org, venue and events.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "NGO",
+      "@id": `${SITE_URL}/#org`,
+      name: SITE_NAME,
+      alternateName: "AK Foundation",
+      url: SITE_URL,
+      logo: `${SITE_URL}/icon.png`,
+      description: DESCRIPTION,
+      email: EMAIL,
+      address: ADDRESS,
+      sameAs: [INSTAGRAM],
+    },
+    venue,
+    ...events
+      .filter((e) => e.date >= builtOn)
+      .map((e) => ({
+        "@type": "MusicEvent",
+        name: e.name,
+        description: e.description,
+        startDate: startDate(e),
+        eventStatus: "https://schema.org/EventScheduled",
+        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+        location: venue,
+        image: e.image ? [`${SITE_URL}${e.image}`] : undefined,
+        performer: e.artists.map((name) => ({
+          "@type": "Person",
+          name: name.replace(/\s*\(.*\)$/, ""),
+        })),
+        organizer: { "@id": `${SITE_URL}/#org` },
+        offers: eventOffers(e),
+      })),
+  ],
+};
+
 export default function Home() {
   return (
     <div className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
       <header className={styles.nav}>
         <a href="#top" className={styles.navBrand}>
           A&amp;K Foundation
@@ -155,11 +239,13 @@ export default function Home() {
             <div className={styles.meta}>
               <div>
                 <h3>Location</h3>
-                <p>80 Travail Road, Markham, Ontario, Canada</p>
+                <p>80 Travail Road, Unit 16, Markham, Ontario, Canada</p>
               </div>
               <div>
                 <h3>Contact</h3>
-                <p>info@akfoundation.ca</p>
+                <p>
+                  <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+                </p>
               </div>
             </div>
           </div>
