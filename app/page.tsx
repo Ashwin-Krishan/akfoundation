@@ -32,6 +32,7 @@ const venue = {
   "@type": "PerformingArtsTheater",
   "@id": `${SITE_URL}/#venue`,
   name: VENUE_NAME,
+  image: `${SITE_URL}/brand/aayakalaihal-arangam-emblem.png`,
   address: ADDRESS,
   url: SITE_URL,
 };
@@ -79,7 +80,7 @@ const jsonLd = {
       name: SITE_NAME,
       alternateName: "AK Foundation",
       url: SITE_URL,
-      logo: `${SITE_URL}/icon.png`,
+      logo: `${SITE_URL}/brand/ak-foundation-logo.png`,
       description: DESCRIPTION,
       email: EMAIL,
       address: ADDRESS,
