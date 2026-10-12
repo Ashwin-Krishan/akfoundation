@@ -218,9 +218,43 @@
   color: #201a14;
 }
 
-.tickets {
-  display: inline-block;
+.actions {
   margin-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tickets,
+.watch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.watch {
+  padding: 13px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(106, 38, 44, 0.35);
+  color: #6a262c;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.watch:hover {
+  border-color: #6a262c;
+  background: rgba(106, 38, 44, 0.05);
+  transform: translateY(-1px);
+}
+
+.watch:focus-visible {
+  outline: 2px solid #b5673a;
+  outline-offset: 3px;
+}
+
+.tickets {
   padding: 14px 28px;
   border-radius: 999px;
   background: #d1784a;

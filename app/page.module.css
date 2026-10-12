@@ -276,6 +276,16 @@
   color: rgba(243, 236, 225, 0.7);
 }
 
+/* ---------- Watch ---------- */
+
+.watchSection {
+  padding: clamp(72px, 10vw, 120px) 0;
+  background: #120f0c;
+  background-image:
+    radial-gradient(circle at 88% 0%, rgba(215, 122, 72, 0.16), transparent 42%),
+    radial-gradient(circle at 0% 100%, rgba(106, 38, 44, 0.28), transparent 50%);
+}
+
 /* ---------- Contact / meta ---------- */
 
 .meta {
@@ -299,14 +309,80 @@
   font-size: 16px;
 }
 
+.meta a {
+  text-decoration: underline;
+  text-decoration-color: rgba(181, 103, 58, 0.35);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.meta a:hover {
+  color: #b5673a;
+  text-decoration-color: #b5673a;
+}
+
+.follow {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.follow a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #3e342c;
+  font-size: 16px;
+}
+
+.follow a svg {
+  color: #b5673a;
+  flex: none;
+}
+
 /* ---------- Footer ---------- */
 
 .footer {
   background: #0c0a08;
   color: rgba(243, 236, 225, 0.55);
   text-align: center;
-  padding: 28px 20px;
+  padding: 32px 20px 28px;
   font-size: 13px;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.social {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.social a {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 236, 225, 0.16);
+  color: rgba(243, 236, 225, 0.8);
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.social a:hover {
+  color: #e08a54;
+  border-color: rgba(224, 138, 84, 0.5);
+  background: rgba(224, 138, 84, 0.08);
+}
+
+.social a:focus-visible {
+  outline: 2px solid #e08a54;
+  outline-offset: 3px;
 }
 
 @media (max-width: 600px) {

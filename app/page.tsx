@@ -1,8 +1,21 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Events from "./Events";
+import Watch from "./Watch";
+import { InstagramIcon, MailIcon, YouTubeIcon } from "./icons";
+import { getLatestVideos, thumbnail, type Video } from "./youtube";
 import { events, todayInToronto, type StudioEvent } from "./event-data";
-import { ADDRESS, DESCRIPTION, EMAIL, INSTAGRAM, SITE_NAME, SITE_URL, VENUE_NAME } from "./site";
+import {
+  ADDRESS,
+  DESCRIPTION,
+  EMAIL,
+  INSTAGRAM,
+  SITE_NAME,
+  SITE_URL,
+  VENUE_NAME,
+  YOUTUBE,
+  YOUTUBE_HANDLE,
+} from "./site";
 
 const studioShots = [
   {
@@ -70,8 +83,8 @@ function eventOffers(event: StudioEvent) {
   };
 }
 
-// Structured data so search engines understand the org, venue and events.
-const jsonLd = {
+// Structured data so search engines understand the org, venue, events and videos.
+const structuredData = (videos: Video[]) => ({
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -84,7 +97,7 @@ const jsonLd = {
       description: DESCRIPTION,
       email: EMAIL,
       address: ADDRESS,
-      sameAs: [INSTAGRAM],
+      sameAs: [INSTAGRAM, YOUTUBE],
     },
     venue,
     ...events
@@ -105,10 +118,23 @@ const jsonLd = {
         organizer: { "@id": `${SITE_URL}/#org` },
         offers: eventOffers(e),
       })),
+    ...videos.map((v) => ({
+      "@type": "VideoObject",
+      name: v.title,
+      description: `${v.title} at ${VENUE_NAME}, Markham.`,
+      thumbnailUrl: thumbnail(v.id),
+      uploadDate: v.published,
+      embedUrl: `https://www.youtube.com/embed/${v.id}`,
+      url: `https://www.youtube.com/watch?v=${v.id}`,
+      publisher: { "@id": `${SITE_URL}/#org` },
+    })),
   ],
-};
+});
 
-export default function Home() {
+export default async function Home() {
+  const videos = await getLatestVideos();
+  const jsonLd = structuredData(videos);
+
   return (
     <div className={styles.page}>
       <script
@@ -121,8 +147,9 @@ export default function Home() {
         </a>
         <nav className={styles.navLinks}>
           <a href="#about">About</a>
-          <a href="#events">Events</a>
           <a href="#studio">Studio</a>
+          <a href="#events">Events</a>
+          <a href="#watch">Watch</a>
           <a href="#contact">Contact</a>
         </nav>
       </header>
@@ -188,18 +215,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="events" className={styles.section}>
-          <div className={styles.sectionInner}>
-            <p className={styles.eyebrowDark}>What&apos;s On</p>
-            <h2 className={styles.sectionTitle}>Upcoming Events</h2>
-            <p className={styles.sectionLede}>
-              Recitals, showcases, and concerts at Aayakalaihal Arangam. Tap
-              an event for the full details.
-            </p>
-            <Events events={events} builtOn={builtOn} />
-          </div>
-        </section>
-
         <section id="studio" className={styles.studioSection}>
           <div className={styles.sectionInner}>
             <p className={styles.eyebrow}>Our Space</p>
@@ -233,6 +248,30 @@ export default function Home() {
           </div>
         </section>
 
+        <section id="events" className={styles.section}>
+          <div className={styles.sectionInner}>
+            <p className={styles.eyebrowDark}>What&apos;s On</p>
+            <h2 className={styles.sectionTitle}>Upcoming Events</h2>
+            <p className={styles.sectionLede}>
+              Recitals, showcases, and concerts at Aayakalaihal Arangam. Tap
+              an event for the full details.
+            </p>
+            <Events events={events} builtOn={builtOn} />
+          </div>
+        </section>
+
+        <section id="watch" className={styles.watchSection}>
+          <div className={styles.sectionInner}>
+            <p className={styles.eyebrow}>Watch &amp; Listen</p>
+            <h2 className={styles.sectionTitleLight}>Recent Performances</h2>
+            <p className={styles.sectionLedeLight}>
+              Recordings and live streams from Aayakalaihal Arangam, straight
+              from our YouTube channel. Press play to watch right here.
+            </p>
+            <Watch videos={videos} />
+          </div>
+        </section>
+
         <section id="contact" className={styles.section}>
           <div className={styles.sectionInner}>
             <p className={styles.eyebrowDark}>Visit Us</p>
@@ -248,12 +287,40 @@ export default function Home() {
                   <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
                 </p>
               </div>
+              <div>
+                <h3>Follow</h3>
+                <ul className={styles.follow}>
+                  <li>
+                    <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer">
+                      <InstagramIcon size={18} />
+                      @aayakalaihalarangam
+                    </a>
+                  </li>
+                  <li>
+                    <a href={YOUTUBE} target="_blank" rel="noopener noreferrer">
+                      <YouTubeIcon size={18} />
+                      {YOUTUBE_HANDLE}
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </section>
       </main>
 
       <footer className={styles.footer}>
+        <nav className={styles.social} aria-label="A&K Foundation elsewhere">
+          <a href={INSTAGRAM} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <InstagramIcon />
+          </a>
+          <a href={YOUTUBE} target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <YouTubeIcon />
+          </a>
+          <a href={`mailto:${EMAIL}`} aria-label="Email">
+            <MailIcon />
+          </a>
+        </nav>
         <p>&copy; {new Date().getFullYear()} A&amp;K Foundation. All rights reserved.</p>
       </footer>
     </div>

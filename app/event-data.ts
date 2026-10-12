@@ -15,6 +15,8 @@ export type StudioEvent = {
   price?: number | string;
   /** Optional link to buy tickets; shows a "Get Tickets" button in the popup. */
   ticketUrl?: string;
+  /** Optional YouTube link (live stream or recording); shows "Watch on YouTube". */
+  watchUrl?: string;
   /** Optional poster in /public/events. Leave out to use a generated graphic. */
   image?: string;
 };

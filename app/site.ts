@@ -14,3 +14,6 @@ export const ADDRESS = {
 
 export const EMAIL = "info@akfoundation.ca";
 export const INSTAGRAM = "https://www.instagram.com/aayakalaihalarangam/";
+export const YOUTUBE_CHANNEL_ID = "UCD4nUbKqRg7Ykp40eFJ544Q";
+export const YOUTUBE_HANDLE = "@AayakalaihalArangam";
+export const YOUTUBE = `https://www.youtube.com/${YOUTUBE_HANDLE}`;

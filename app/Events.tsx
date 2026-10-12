@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { todayInToronto, type StudioEvent } from "./event-data";
+import { ArrowUpRightIcon, YouTubeIcon } from "./icons";
 import styles from "./Events.module.css";
 
 // Event dates are calendar days, so format them at noon UTC to avoid
@@ -245,15 +246,31 @@ export default function Events({
                   </dd>
                 </div>
               </dl>
-              {selected.ticketUrl && (
-                <a
-                  href={selected.ticketUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.tickets}
-                >
-                  Get Tickets ↗
-                </a>
+              {(selected.ticketUrl || selected.watchUrl) && (
+                <div className={styles.actions}>
+                  {selected.ticketUrl && (
+                    <a
+                      href={selected.ticketUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.tickets}
+                    >
+                      Get Tickets
+                      <ArrowUpRightIcon size={16} />
+                    </a>
+                  )}
+                  {selected.watchUrl && (
+                    <a
+                      href={selected.watchUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.watch}
+                    >
+                      <YouTubeIcon size={18} />
+                      Watch on YouTube
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           </div>
