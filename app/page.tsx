@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 import Events from "./Events";
 import Watch from "./Watch";
 import { InstagramIcon, MailIcon, YouTubeIcon } from "./icons";
-import { getLatestVideos, thumbnail, type Video } from "./youtube";
+import { thumbnail, videos, type Video } from "./youtube";
 import { events, todayInToronto, type StudioEvent } from "./event-data";
 import {
   ADDRESS,
@@ -123,7 +123,7 @@ const structuredData = (videos: Video[]) => ({
       name: v.title,
       description: `${v.title} at ${VENUE_NAME}, Markham.`,
       thumbnailUrl: thumbnail(v.id),
-      uploadDate: v.published,
+      uploadDate: v.date,
       embedUrl: `https://www.youtube.com/embed/${v.id}`,
       url: `https://www.youtube.com/watch?v=${v.id}`,
       publisher: { "@id": `${SITE_URL}/#org` },
@@ -131,8 +131,7 @@ const structuredData = (videos: Video[]) => ({
   ],
 });
 
-export default async function Home() {
-  const videos = await getLatestVideos();
+export default function Home() {
   const jsonLd = structuredData(videos);
 
   return (
@@ -265,8 +264,8 @@ export default async function Home() {
             <p className={styles.eyebrow}>Watch &amp; Listen</p>
             <h2 className={styles.sectionTitleLight}>Recent Performances</h2>
             <p className={styles.sectionLedeLight}>
-              Recordings and live streams from Aayakalaihal Arangam, straight
-              from our YouTube channel. Press play to watch right here.
+              Recordings from the Arangam stage. Press play to watch right
+              here, or find more on our YouTube channel.
             </p>
             <Watch videos={videos} />
           </div>

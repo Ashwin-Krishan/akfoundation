@@ -7,13 +7,14 @@ import { YOUTUBE, YOUTUBE_HANDLE } from "./site";
 import { thumbnail, type Video } from "./youtube";
 import styles from "./Watch.module.css";
 
-const formatDate = (iso: string) =>
+// Dates are calendar days; format at noon UTC so they never slip a day.
+const formatDate = (date: string) =>
   new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Toronto",
+    timeZone: "UTC",
     month: "long",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(iso));
+  }).format(new Date(`${date}T12:00:00Z`));
 
 // "Navarathiri 2026 - Day 1 - Performance by …" → series "Navarathiri 2026 · Day 1",
 // name "Performance by …". Titles without separators stay whole.
@@ -127,7 +128,7 @@ export default function Watch({ videos }: { videos: Video[] }) {
           {series && <p className={styles.series}>{series}</p>}
           <h3 className={styles.videoTitle}>{name}</h3>
           <p className={styles.meta}>
-            <time dateTime={active.published}>{formatDate(active.published)}</time>
+            <time dateTime={active.date}>{formatDate(active.date)}</time>
             <span aria-hidden="true">·</span>
             <a
               href={`https://www.youtube.com/watch?v=${active.id}`}
@@ -154,8 +155,8 @@ export default function Watch({ videos }: { videos: Video[] }) {
                     <span className={styles.itemText}>
                       {t.series && <span className={styles.itemSeries}>{t.series}</span>}
                       <span className={styles.itemTitle}>{t.name}</span>
-                      <time className={styles.itemDate} dateTime={v.published}>
-                        {formatDate(v.published)}
+                      <time className={styles.itemDate} dateTime={v.date}>
+                        {formatDate(v.date)}
                       </time>
                     </span>
                   </button>
