@@ -9,13 +9,7 @@ export type Video = {
 
 // Performances shown in the "Recent Performances" section, newest first.
 // Only videos listed here appear on the site (trailers etc. stay off).
-export const videos: Video[] = [
-  {
-    id: "PhtkWJzzVKM",
-    title: "Navarathiri 2026 - Day 1 - Performance by Students of Sri. Rathiruban Paramsothy",
-    date: "2026-10-12",
-  },
-];
+export const videos: Video[] = [];
 
 /** hqdefault always exists; maxresdefault (1280px) only for HD uploads. */
 export const thumbnail = (id: string, size: "hq" | "maxres" = "hq") =>
